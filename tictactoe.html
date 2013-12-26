@@ -9,7 +9,18 @@
 
 <script type="text/javascript">
 
-var fill = false;
+var fill = false, feld = [];
+
+function start() {
+    var i, j;
+    for (i=0; i<3; i++) {
+        feld[i] = [];
+        for (j=0; j<3; j++) {
+            feld[i][j] = ' ';
+        }
+    }
+    zeichne();
+}
 
 function spielZug(x, y, kreis) {
     var canvas = document.getElementById('spiel');
@@ -22,6 +33,12 @@ function spielZug(x, y, kreis) {
         mitteX = (x+0.5)*(w/3);
         mitteY = (y+0.5)*(h/3);
         
+        if (feld[x][y] !== ' ') {
+            return false;
+        }
+
+        feld[x][y] = kreis;
+
         if (kreis) {
             ctx.moveTo(mitteX, mitteY);
             ctx.beginPath();
@@ -34,6 +51,7 @@ function spielZug(x, y, kreis) {
             ctx.lineTo(mitteX - w/8, mitteY + h/8);        }        
         ctx.stroke();
     }
+    return true;
 }
         
 
@@ -71,25 +89,33 @@ function zeichne() {
         y = ((pt.clientY-canvas.offsetTop) * 3) / canvas.height;
         console.log(x, y);
         console.log(Math.floor(x), Math.floor(y));
-        spielZug(Math.floor(x), Math.floor(y), fill);
-        if (fill) {
-            fill = false;
-        } else {
-            fill = true;
+        if (spielZug(Math.floor(x), Math.floor(y), fill)) {
+            if (fill) {
+                fill = false;
+            } else {
+                fill = true;
+            }
         }
     }
 
 };
+
+function testGewonnen() {
+    var i;
+    for (i=0; i<3; i++) {
+
+
+    }
+}
+
 </script>
 
 </head>
 
-<body>
+<body onload="start();">
 <h1>Tic-Tac-Toe</h1>
-<canvas id="spiel" width="300" height="300">Hier müsste eine Zeichnung sein</canvas>
-<div>
-	<a href="#" onclick="zeichne();">Klick mich</a>
-</div>
+<canvas id="spiel" width="500" height="500">Hier müsste eine Zeichnung sein</canvas>
+
 </body>
 
 </html>
